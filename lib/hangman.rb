@@ -1,5 +1,6 @@
 require 'json'
 
+
 SAVE_FILE_NAME = 'game.hangman'
 SAVE_DIR = 'savedgames'
 
@@ -82,7 +83,6 @@ class Game
     @secret_word = select_random_word.chars
     @guessed_letters = []
     @remaining_letters_in_word = @secret_word.length
-    print_state
   end
 
   def guess(letter)
@@ -151,7 +151,6 @@ end
 
 while true
   game.print_state
-  game.debug
   print 'Enter letter: '
   letter = gets.chomp
   unless letter.length == 1
