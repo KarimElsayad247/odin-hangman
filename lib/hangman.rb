@@ -14,9 +14,24 @@ class Game
     return word
   end
 
+  def guessed?(letter)
+    if @guessed_letters.include? letter
+      return letter
+    else
+      return '_'
+    end
+  end
+
+  # Looking at the secret word, construct an array where non-guessed characters are
+  # replaced with underscores
+  def construct_out_string
+    out_string = @secret_word.map { |c| guessed?(c) }
+    return out_string.join(' ')
+  end
+
   def print_state
-    puts @remaining_attempts
-    puts @secret_word
+    puts "Remaining attempts: #{@remaining_attempts}"
+    puts construct_out_string
   end
 
   public
@@ -28,7 +43,8 @@ class Game
   # start a new game
   def new_game
     @remaining_attempts = 6
-    @secret_word = select_random_word
+    @secret_word = select_random_word.chars
+    @guessed_letters = []
   end
 
 
