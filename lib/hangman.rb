@@ -63,7 +63,6 @@ class Game
   end
 
   def guess(letter)
-
     # input should be case insensitive
     letter = letter.downcase
 
@@ -75,8 +74,12 @@ class Game
     print_state
   end
 
-  def check_state
+  def finished?
+    return true if @remaining_attempts.zero? || @remaining_letters_in_word.zero?
+  end
 
+  def win?
+    return true if @remaining_attempts.positive?
   end
 
   # Idea: save a game in a file ending with .hangman in a ./savedgames dir
@@ -90,13 +93,22 @@ class Game
   end
 end
 
-game = Game.new("5desk.txt")
+game = Game.new('5desk.txt')
 game.new_game
 game.debug
+
 while true 
   print 'Enter letter: '
   letter = gets.chomp
   puts 'Bad input!' unless letter.length == 1
   game.guess(letter)
   game.debug
+  if game.finished?
+    if game.win?
+      puts 'You win!'
+    else
+      puts 'Game over!'
+    end
+    break
+  end
 end
