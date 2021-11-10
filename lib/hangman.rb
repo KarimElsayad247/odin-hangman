@@ -10,7 +10,7 @@ class Game
   def select_random_word
     # @type [String]
     word = ''
-    word = @words.sample until word.length.between?(5, 12)
+    word = @words.sample.chomp until word.length.between?(5, 12)
     return word
   end
 
@@ -29,15 +29,28 @@ class Game
     return out_string.join(' ')
   end
 
+  def update_state(letter)
+    @guessed_letters.push letter
+    if @secret_word.include? letter
+      puts 'Right!'
+      @remaining_letters_in_word -= @secret_word.count(letter)
+    else
+      puts 'Wrong!'
+      @remaining_attempts -= 1
+    end
+  end
+
   def print_state
     puts "Remaining attempts: #{@remaining_attempts}"
-    puts construct_out_string
+    puts "Letters remaining in word: #{@remaining_letters_in_word}"
+    puts "#{construct_out_string} \n\n"
   end
 
   public
 
   def debug
-    print_state
+    p @secret_word
+    puts @secret_word.join
   end
 
   # start a new game
@@ -45,10 +58,24 @@ class Game
     @remaining_attempts = 6
     @secret_word = select_random_word.chars
     @guessed_letters = []
+    @remaining_letters_in_word = @secret_word.length
+    print_state
   end
 
-
   def guess(letter)
+
+    # input should be case insensitive
+    letter = letter.downcase
+
+    if @guessed_letters.include? letter
+      puts "You already guessed #{letter}"
+    else
+      update_state(letter)
+    end
+    print_state
+  end
+
+  def check_state
 
   end
 
@@ -66,3 +93,10 @@ end
 game = Game.new("5desk.txt")
 game.new_game
 game.debug
+while true 
+  print 'Enter letter: '
+  letter = gets.chomp
+  puts 'Bad input!' unless letter.length == 1
+  game.guess(letter)
+  game.debug
+end
