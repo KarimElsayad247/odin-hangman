@@ -132,6 +132,10 @@ class Game
       data['remaining_letters_in_word']
     )
   end
+
+  def secret_word
+    return @secret_word.join
+  end
 end
 
 game = Game.new('5desk.txt')
@@ -165,6 +169,7 @@ while true
         puts 'You win!'
       else
         puts 'Game over!'
+        puts "Word was #{game.secret_word}"
       end
       break
     end
